@@ -5,7 +5,7 @@ import еxceptions.InvalidAmountException;
 
 import static org.junit.Assert.*;
 
-public class AccountTest {
+public class BasicAccountTest {
     private BasicAccount current;
 
     @Before

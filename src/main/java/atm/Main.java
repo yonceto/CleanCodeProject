@@ -1,45 +1,37 @@
 package atm;
 
 public class Main {
+    public static final String FIRST_USER_ID = "User1";
+    public static final String FIRST_USER_PIN = "123";
+    public static final String FIRST_USER_NEWPIN = "1234";
+    public static final String SECOND_USER_ID = "User2";
+    public static final String SECOND_USER_PIN = "456";
+    public static final String SECOND_USER_NEWPIN = "4567";
     public static void main(String[] args) {
         BankManagement currentBankManagement = new BankManagement();
         AtmImpl myATMImpl1 = new AtmImpl(currentBankManagement);
 
         //Add users and account via RegularUser management system
-        currentBankManagement.addUser("ABC123", "123");
-        currentBankManagement.addUser("DEF345", "345");
-        currentBankManagement.addNewAccount("ABC123", AccountType.Basic); //accountNumber = 1
-        currentBankManagement.addNewAccount("ABC123", AccountType.Basic); // accountNumber = 2
-        currentBankManagement.addNewAccount("DEF345", AccountType.Basic); //accountNumber = 3
-        currentBankManagement.addNewAccount("ABC123", AccountType.Overdraft); //accountNumber = 4
-        currentBankManagement.addNewAccount("DEF345", AccountType.RestrictedWithdraw); // entered withdraw restriction = 50
+        currentBankManagement.addUser(FIRST_USER_ID, FIRST_USER_PIN);
+        currentBankManagement.addUser(SECOND_USER_ID, SECOND_USER_PIN);
+        currentBankManagement.addNewAccount(FIRST_USER_ID, AccountType.Basic); //accountNumber = 1
+        currentBankManagement.addNewAccount(FIRST_USER_ID, AccountType.Basic); // accountNumber = 2
+        currentBankManagement.addNewAccount(SECOND_USER_ID, AccountType.Basic); //accountNumber = 3
+        currentBankManagement.addNewAccount(FIRST_USER_ID, AccountType.Overdraft); //accountNumber = 4
+        currentBankManagement.addNewAccount(SECOND_USER_ID, AccountType.RestrictedWithdraw); // entered withdraw restriction = 50
 
-        //Money operations via first ATM
-        myATMImpl1.depositToAccount("ABC123", "123",1, 50);
-        System.out.println(myATMImpl1.checkBalanceOfAccount("ABC123", "123", 1));
-        myATMImpl1.withdrawFromAccount("ABC123", "123", 1, 20);
-        System.out.println(myATMImpl1.checkBalanceOfAccount("ABC123", "123", 1));
-        myATMImpl1.changePinCode("ABC123", "123", "124");
-        System.out.println(myATMImpl1.checkBalanceOfAccount("ABC123", "124", 1));
-        myATMImpl1.depositToAccount("DEF345", "345", 5, 100);
-        myATMImpl1.withdrawFromAccount("DEF345", "345", 5, 30);
-        System.out.println(myATMImpl1.checkBalanceOfAccount("DEF345", "345", 5));
-       // myATMImpl1.withdraw("DEF345", "345", 5, 60); // throws exception as expected
-
-        myATMImpl1.depositToAccount("ABC123", "124", 2, 25);
-        System.out.println(myATMImpl1.checkBalanceOfAccount("ABC123", "124", 2));
-        myATMImpl1.withdrawFromAccount("ABC123", "124", 4, 35);
-        System.out.println(myATMImpl1.checkBalanceOfAccount("ABC123", "124", 4));
+        myATMImpl1.withdrawFromAccount(FIRST_USER_ID, FIRST_USER_PIN, 4, 35);
+        System.out.println(myATMImpl1.checkBalanceOfAccount(FIRST_USER_ID, FIRST_USER_PIN, 4));
 
         //Join accounts
-        currentBankManagement.joinAccounts("ABC123", "124", 4, "DEF345");
-        System.out.println(myATMImpl1.checkBalanceOfAccount("DEF345", "345", 4));
+        currentBankManagement.joinAccounts(FIRST_USER_ID, FIRST_USER_PIN, 4, SECOND_USER_ID);
+        System.out.println(myATMImpl1.checkBalanceOfAccount(SECOND_USER_ID, SECOND_USER_PIN, 4));
 
         //Add second ATM with same RegularUser management system
         AtmImpl myATMImpl2 = new AtmImpl(currentBankManagement);
-        System.out.println(myATMImpl2.checkBalanceOfAccount("DEF345", "345", 4));
+        System.out.println(myATMImpl2.checkBalanceOfAccount(SECOND_USER_ID, SECOND_USER_PIN, 4));
         //Money operation via second ATM and check balance via first ATM
-        myATMImpl2.depositToAccount("DEF345", "345", 4, 50);
-        System.out.println(myATMImpl1.checkBalanceOfAccount("DEF345", "345", 4)); //expected: 15
+        myATMImpl2.depositToAccount(SECOND_USER_ID, SECOND_USER_PIN, 4, 50);
+        System.out.println(myATMImpl1.checkBalanceOfAccount(SECOND_USER_ID, SECOND_USER_PIN, 4)); //expected: 15
     }
 }
